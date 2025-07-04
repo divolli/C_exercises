@@ -6,11 +6,11 @@ If you're a student struggling with C programming — especially with memory all
 
 This is a growing collection of carefully crafted C exercises designed to help you:
 
-    - Get better at memory management and dynamic allocation
+- Get better at memory management and dynamic allocation
 
-    - Understand pointers, structs, and how memory works in C
+- Understand pointers, structs, and how memory works in C
 
-    - Develop problem-solving skills and coding confidence
+- Develop problem-solving skills and coding confidence
 
 The exercises are written in .md files, located in the exercises/ folder.
 ## 💡 How to use it
@@ -18,17 +18,18 @@ The exercises are written in .md files, located in the exercises/ folder.
 Treat this as your personal mini-project. These aren't just quick drills — they’re challenges meant to make you think.
 
 Here’s how I recommend you approach them:
-    1. Read each task carefully.
+    
+1. Read each task carefully.
 
-    2. Try to solve it step by step on your own.
+2. Try to solve it step by step on your own.
 
-    3. Use AI as a mentor, not a crutch:
+3. Use AI as a mentor, not a crutch:
 
-        - Ask for explanations, not code.
+    - Ask for explanations, not code.
 
-        - Ask for hints, not solutions.
+    - Ask for hints, not solutions.
 
-        - Ask "why" and "how", not "give me".
+    - Ask "why" and "how", not "give me".
 
 ## ❗ DO NOT COPY-PASTE AI CODE.
 If you do that, you're not solving the problem — you're skipping the learning. And honestly, you'll learn nothing.
@@ -44,6 +45,7 @@ They’re not perfect, but that’s the point. You’ll see how another student 
 
 Any Linux environment or compiler (e.g. gcc, clang) will do.
 Use whatever editor or IDE you're comfortable with — VSCode, Neovim, etc.
+
 ##📂 Structure
 ```
 .
