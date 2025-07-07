@@ -21,7 +21,7 @@ struct battle_t {
 
 // 3. struct battle_node_t: A node in a doubly linked list, storing battle data.
 struct battle_node_t {
-  struct battle_t *battle;         // Pointer to a battle_t structure.
+  struct battle_t *battle;         // Pointer to a battle_t structure .
   struct battle_node_t *prev;      // Pointer to the previous node in the list.
   struct battle_node_t *next;      // Pointer to the next node in the list.
 };

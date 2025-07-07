@@ -10,73 +10,73 @@ Your goal is to implement an advanced system for managing data about galactic ba
 
 You must implement **four main data structures** as described below:
 
-- `struct fleet_status_t`:  
+- `struct fleet_status_t`:
     Contains **bit-coded status flags**, the **number of ships**, and the **fleet name**.
-    
-- `struct battle_t`:  
+
+- `struct battle_t`:
     Contains the **battle name**, **date**, and an **array of pointers** to `struct fleet_status_t`.
-    
-- `struct battle_node_t`:  
+
+- `struct battle_node_t`:
     A **doubly-linked list node** that stores a pointer to `struct battle_t`.
-    
-- `struct galaxy_history_t`:  
+
+- `struct galaxy_history_t`:
     The **main structure**, which contains **pointers to the head and tail** of the battle list, as well as the **total number of battles**.
-    
+
 
 ---
 
 ### **Memory and Pointer Management**
 
-- ❌ **No `[]` operator**:  
+- ❌ **No `[]` operator**:
     Wherever possible, you must use **pointer arithmetic** instead of the indexing operator `[]`.
-    
-- 📦 **Dynamic allocation**:  
+
+- 📦 **Dynamic allocation**:
     All `char*` fields (e.g., `fleet_name`, `battle_name`) must be **dynamically allocated** using functions like `strdup()` or `malloc()` + `strcpy()`.
-    
-- 🧩 **Nested allocation**:  
+
+- 🧩 **Nested allocation**:
     Memory must be allocated on **multiple levels**:
-    
+
     - for `galaxy_history_t`,
-        
+
     - for each `battle_node_t`,
-        
+
     - for each `battle_t`,
-        
+
     - for the **array of fleet_status pointers** in `battle_t`,
-        
+
     - and finally for each individual `fleet_status_t`.
-        
-- 🔚 **NULL termination**:  
+
+- 🔚 **NULL termination**:
     The array of `fleet_status_t*` pointers in `battle_t` **must end with a NULL pointer** — this is essential for proper iteration over fleets.
-    
-- 🎯 **Exact allocation**:  
+
+- 🎯 **Exact allocation**:
     Your data loading function must allocate **only as much memory as needed**, minimizing overallocation (e.g., by using `realloc()` after filling the array).
-    
-- 🧹 **Memory cleanup**:  
-    The function `destroy_galactic_history` must **free all allocated memory** across all levels of the data structure.  
-    This is the **most important part** to avoid memory leaks.  
+
+- 🧹 **Memory cleanup**:
+    The function `destroy_galactic_history` must **free all allocated memory** across all levels of the data structure.
+    This is the **most important part** to avoid memory leaks.
     It must also **work correctly even in case of partial data load** (e.g., after an error).
-    
+
 
 ---
 
 ### **Parsing Data from File (`galactic_data.txt`)**
 
-The file contains data about **battles**, their **dates**, and **fleets**.  
+The file contains data about **battles**, their **dates**, and **fleets**.
 The format is specific:
 
 - Lines begin with `BATTLE:`, `DATE:`, and `FLEET:` (details were provided earlier).
-    
+
 - Each `FLEET:` line contains:
-    
+
     - fleet name,
-        
+
     - base status flag value (numeric),
-        
+
     - number of ships,
-        
+
     - and **verbal descriptions of additional status flags**, separated by `|`.
-        
+
 
 You must correctly **map these verbal descriptions to bits**, and set the appropriate bits in the `status_flags` field (in addition to the base numeric value).
 
@@ -89,25 +89,25 @@ You must correctly **map these verbal descriptions to bits**, and set the approp
 |`Critical_Damage`|2|4|
 |`Withdrawal`|3|8|
 
---- 
+---
 
 ### **Function Implementation**
 
 You must implement **all declared functions**, including:
 
 - `initialize_history` – Initializes the main structure.
-    
-- `load_galactic_history` – Loads data from the file and builds the full data structure (a list of battles with arrays of fleets).  
+
+- `load_galactic_history` – Loads data from the file and builds the full data structure (a list of battles with arrays of fleets).
     Includes **robust error handling** (allocation errors, file corruption, etc.).
-    
+
 - `display_galactic_history` – Displays the contents of the entire data structure.
-    
+
 - `count_fleets_with_status_bits` – Bitwise function: counts fleets with specified status bits.
-    
+
 - `modify_fleet_statuses_in_battle` – Bitwise function: modifies fleet statuses in a given battle using `OR`, `AND NOT`, `XOR` operations with a bitmask.
-    
+
 - `destroy_galactic_history` – A key function that frees **all allocated memory**.
-    
+
 
 ---
 
@@ -116,15 +116,15 @@ You must implement **all declared functions**, including:
 The main goal is to demonstrate your skills in:
 
 - Designing and implementing **complex nested data structures**.
-    
+
 - **Precise dynamic memory management** (allocation, reallocation, freeing) at multiple levels.
-    
+
 - Efficient usage of **pointers and pointer arithmetic**.
-    
+
 - Implementing **bitwise operations**.
-    
+
 - Writing **robust error handling**, especially for memory allocation failures.
-    
+
 
 ---
 
@@ -176,9 +176,9 @@ FLEET:Umbara Militia|0|180|Critical Damage|Withdrawa
 
 // 1. struct fleet_status_t: Represents the status of a single fleet.
 struct fleet_status_t {
-unsigned int status_flags;   // Bit-encoded fleet status flags.
+unsigned char status_flags;   // Bit-encoded fleet status flags.
                                 // e.g., Bit 0: "Ready for Jump", Bit 1: "Shields Active", etc.
-unsigned short total_ships;  // Total number of ships in this fleet.
+unsigned int total_ships;  // Total number of ships in this fleet.
 char *fleet_name;            // Name of the fleet (e.g., "Red Squadron").
                                 // Must be dynamically allocated (e.g., using strdup).
 };
