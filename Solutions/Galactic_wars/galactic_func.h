@@ -4,8 +4,8 @@
 
 // 1. struct fleet_status_t: Represents the status of a single fleet.
 struct fleet_status_t {
-  unsigned int status_flags;   // Bit-encoded fleet status flags. Bit 0: "Ready for Jump", Bit 1: "Shields Active", etc.
-  unsigned short total_ships;  // Total number of ships in this fleet.
+  unsigned char status_flags;   // Bit-encoded fleet status flags. Bit 0: "Ready for Jump", Bit 1: "Shields Active", etc.
+  unsigned int total_ships;  // Total number of ships in this fleet.
   char *fleet_name;            // Name of the fleet (e.g., "Red Squadron").
 };
 

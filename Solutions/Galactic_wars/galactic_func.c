@@ -115,6 +115,18 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
   unsigned int battle_date, total_ships;
   unsigned char status_flag;
 
+  // Entering main loop
+  int resize = 2;
+  while (fgets(line, sizeof(line), fptr) != NULL){
+    if (sscanf(line, "BATTLE:%57[^\n]\nDATE:%u" ,battle_name, &battle_date) == 2){
+      //TODO
+      // logic for reading battle
+    }
+    if (sscanf(line, "FLEET:%57[^|]|0|%u|", fleet_name, &total_ships) == 2){
+      //TODO
+      // logic for reading data to fleet struct and realloc logic wiht resize, to check fleet status -> use strstr()
+    }
+  }
   fclose(fptr);
   return 0;
 }
