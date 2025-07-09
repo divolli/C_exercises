@@ -161,7 +161,7 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
       if(!new_battle){
         fclose(fptr);
         // free logic
-
+        destroy_galactic_history(history_ptr);
         return 4;
       }
       // push new battle to the start (first battle in file will be at the tail of the list)
@@ -181,7 +181,7 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
         if (!temp){
           fclose(fptr);
           // free logic
-
+          destroy_galactic_history(history_ptr);
           return 4;
         }
         fleets = temp;
@@ -197,7 +197,7 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
     else {
       fclose(fptr);
       // Free logic
-
+      destroy_galactic_history(history_ptr);
       // Corrupted file format
       return 3;
     }

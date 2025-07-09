@@ -16,6 +16,11 @@ int main(void){
   }
 
   // Read from a file
+  int load = load_galactic_history(file, &data);
+  if (load != 0) return load;
 
+  display_galactic_history(data);
+  //free data
+  destroy_galactic_history(&data);
   return 0;
 }
