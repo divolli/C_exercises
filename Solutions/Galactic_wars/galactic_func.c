@@ -8,9 +8,6 @@ char *first_bit = "Ready for Jump";
 char *second_bit = "Shield Active";
 char *third_bit = "Critical Damage";
 char *fourth_bit = "Withdrawal";
-<<<<<<< HEAD
-
-=======
 // Function to set a fleet status
 unsigned char *set_fleet_status(char *line){
   if (!line) return NULL;
@@ -38,7 +35,6 @@ unsigned char *set_fleet_status(char *line){
 
   return res;
 }
->>>>>>> master
 
 // Helper functions for double linked list structure.........
 
@@ -63,10 +59,7 @@ struct battle_node_t* create_new_battle(char *battle_name, unsigned int battle_d
   // Writing data to a battle struct
   struct battle_t *curr_battle = node->battle;
   curr_battle->battle_date = battle_date;
-<<<<<<< HEAD
-=======
   curr_battle->num_fleets = 0;
->>>>>>> master
   curr_battle->battle_name = strdup(battle_name);
   if (!curr_battle->battle_name){
     free(node->battle);
@@ -88,17 +81,6 @@ struct battle_node_t* create_new_battle(char *battle_name, unsigned int battle_d
 
 
 // Fill fleet statuses in specific battle
-<<<<<<< HEAD
-void fleet_statuses_fill(struct fleet_status_t *fleet, char *fleet_name, unsigned short total_ships, unsigned int status_flag){
-  if (!fleet || !fleet_name) return;
-
-  fleet->fleet_name = strdup(fleet_name);
-  if (!fleet->fleet_name) return;
-
-  fleet->status_flags = status_flag;
-  fleet->total_ships = total_ships;
-  return;
-=======
 struct fleet_status_t *create_fleet_statuse(char *fleet_name, unsigned short total_ships, unsigned int status_flag){
   if (!fleet_name) return NULL;
 
@@ -113,7 +95,6 @@ struct fleet_status_t *create_fleet_statuse(char *fleet_name, unsigned short tot
   fleet->status_flags = status_flag;
   fleet->total_ships = total_ships;
   return fleet;
->>>>>>> master
 }
 
 
@@ -134,13 +115,6 @@ void pushfront_node(struct galaxy_history_t *history , struct battle_node_t *cur
 
 
 /*
-<<<<<<< HEAD
-// Push back node, Do i even need this?
-void pushback_node(struct galaxy_history_t *history , struct battle_node_t *current_battle){}
-*/
-
-
-=======
 // Push back node (Because of double linked list I think is optional +
 // we don't need to insert data to a list in sorted way I assume, (if it is it also be nice thing to implement insertion at some index)
 //  so main logic is that, the tail of the list is going to be a very first line of the file)
@@ -148,7 +122,6 @@ void pushback_node(struct galaxy_history_t *history , struct battle_node_t *curr
 */
 
 // MAIN FUNCTIONS
->>>>>>> master
 // galactic_func.h functions implementation...
 
 int initialize_history(struct galaxy_history_t **history_ptr){
@@ -165,15 +138,11 @@ int initialize_history(struct galaxy_history_t **history_ptr){
 // Returns: 0 - success, 1 - invalid input (NULL), 2 - file opening error,
 //          3 - corrupted file format, 4 - memory allocation error.
 int load_galactic_history(const char *fname, struct galaxy_history_t **history_ptr){
-<<<<<<< HEAD
-  if (!fname || !history_ptr || !*history_ptr) return 1;
-=======
   if (!fname || !history_ptr) return 1;
 
   //Init history
   int res = initialize_history(history_ptr);
   if (res) return 1;
->>>>>>> master
 
   // File handling
   FILE *fptr = fopen(fname, "r");
@@ -182,22 +151,6 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
   // Declaring helping buffers
   char line[256], battle_name[58], fleet_name[58];
   unsigned int battle_date, total_ships;
-<<<<<<< HEAD
-  unsigned char status_flag;
-
-  // Entering main loop
-  int resize = 2;
-  while (fgets(line, sizeof(line), fptr) != NULL){
-    if (sscanf(line, "BATTLE:%57[^\n]\nDATE:%u" ,battle_name, &battle_date) == 2){
-      //TODO
-      // logic for reading battle
-    }
-    if (sscanf(line, "FLEET:%57[^|]|0|%u|", fleet_name, &total_ships) == 2){
-      //TODO
-      // logic for reading data to fleet struct and realloc logic wiht resize, to check fleet status -> use strstr()
-    }
-  }
-=======
 
   // Entering main loop
   int resize = 1;
@@ -250,7 +203,6 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
     }
   }
 
->>>>>>> master
   fclose(fptr);
   return 0;
 }
