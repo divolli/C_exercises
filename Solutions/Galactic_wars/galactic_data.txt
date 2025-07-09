@@ -1,0 +1,36 @@
+BATTLE:Battle of Yavin
+DATE:19770525
+FLEET:Red Squadron|0|12|Ready for Jump|Shields Active
+FLEET:Gold Squadron|0|8|Shields Active
+FLEET:Imperial Death Star Defense|0|100|Critical Damage
+BATTLE:Siege of Hoth
+DATE:19800521
+FLEET:Rebel Ground Forces|0|50|Critical Damage|Withdrawal
+FLEET:Imperial Blizzard Force|0|800|Shields Active|Ready for Jump
+FLEET:Rogue Squadron|0|6|Ready for Jump
+BATTLE:Skirmish at Ord Mantell
+DATE:19820716
+FLEET:Smuggler Alliance|0|15|Ready for Jump|Shields Active
+FLEET:Imperial Blockade Fleet|0|30|Shields Active
+BATTLE:Liberation of Kashyyyk
+DATE:20050519
+FLEET:Wookiee Freedom Fighters|0|200|Ready for Jump|Shields Active
+FLEET:Republic Fleet Support|0|50|Shields Active
+FLEET:Separatist Occupation Force|0|400|Critical Damage|Withdrawal
+BATTLE:First Battle of Geonosis
+DATE:20020516
+FLEET:Republic Grand Army|0|1000|Ready for Jump|Shields Active
+FLEET:Confederacy Droid Army|0|5000|Critical Damage
+BATTLE:Battle of Coruscant
+DATE:20050519
+FLEET:Republic Home Fleet|0|3000|Ready for Jump|Shields Active
+FLEET:Separatist Invasion Fleet|0|2500|Critical Damage
+FLEET:Jedi Starfighter Corps|0|100|Ready for Jump|Shields Active
+BATTLE:Clash at Mygeeto
+DATE:20050519
+FLEET:Galactic Marine Corps|0|150|Ready for Jump
+FLEET:Separatist Artillery|0|300|Critical Damage
+BATTLE:Fall of Umbara
+DATE:20050519
+FLEET:501st Legion|0|200|Shields Active|Ready for Jump
+FLEET:Umbara Militia|0|180|Critical Damage|Withdrawal
