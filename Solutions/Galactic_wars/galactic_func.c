@@ -208,8 +208,50 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
 }
 
 
-void display_galactic_history(const struct galaxy_history_t *history){
+void destroy_galactic_history(struct galaxy_history_t **history_ptr){
+  if (!history_ptr || !*history_ptr) return;
 
+  struct battle_node_t *current = (*history_ptr)->head;
+
+  while(current){
+    struct battle_node_t *next = current->next;
+    struct fleet_status_t **fleet = current->battle->fleet_statuses;
+    while (fleet){
+      struct fleet_status_t *temp = *fleet;
+      if (temp->fleet_name) free(temp->fleet_name);
+      if (temp) free(temp);
+      fleet++;
+    }
+    if (current->battle->fleet_statuses) free(current->battle->fleet_statuses);
+    if (current->battle->battle_name) free(current->battle->battle_name);
+    if (current->battle) free(current->battle);
+    if (current) free(current);
+    current = next;
+  }
+  free(*history_ptr);
+}
+
+
+void display_galactic_history(const struct galaxy_history_t *history){
+  if (!history) return;
+
+  struct battle_node_t *current = history->head;
+
+  while(current){
+    struct battle_node_t *next = current->next;
+    struct fleet_status_t **fleet = current->battle->fleet_statuses;
+    printf("%s WAS ON %u YEARS AFTER FIRST GALACTIC ERA\n TOTAL AMOUNT OF FLEETS : %lu", current->battle->battle_name, current->battle->battle_date, current->battle->num_fleets);
+    while (fleet){
+      struct fleet_status_t *temp = *fleet;
+      printf("%s AMOUNT OF SHIPS IN THIS FLEET %u flag statuses: ", temp->fleet_name, temp->total_ships);
+      for (int i = 0; i < (int)sizeof(unsigned char) * 8; ++i){
+        if (temp->status_flags & (1u << i)) printf("%d 1", i);
+          // logic for printing status flags
+      }
+      fleet++;
+    }
+    current = next;
+  }
 }
 
 
@@ -217,7 +259,7 @@ void display_galactic_history(const struct galaxy_history_t *history){
 // specified status bits set.
 // Returns: The count of fleets meeting the criteria, -1 on error (e.g., NULL history).
 int count_fleets_with_status_bits(const struct galaxy_history_t *history, unsigned int mask){
-
+  return 0; // place holder
 }
 
 
@@ -227,11 +269,5 @@ int count_fleets_with_status_bits(const struct galaxy_history_t *history, unsign
 // `mask`: The bitmask to apply the operation with.
 // Returns: The number of fleets modified, -1 if battle not found or on error.
 int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char *battle_name, int operation_type, unsigned int mask){
-
+  return 0; // place holder
 }
-
-
-void destroy_galactic_history(struct galaxy_history_t **history_ptr){
-
-}
-
