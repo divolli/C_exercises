@@ -27,5 +27,6 @@ int main(void){
   // display_galactic_history(data);
   //free data
   destroy_galactic_history(&data);
+  free(data);
   return 0;
 }

@@ -156,6 +156,9 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
   while (fgets(line, sizeof(line), fptr) != NULL && *line != '\n'){
 
     if (sscanf(line, "BATTLE:%57[^\n]" ,battle_name) == 1){
+      //TODO reset not used fleet status** after resizing
+      //.....
+
       // Creating new battle node
       struct battle_node_t *new_battle = create_new_battle(battle_name, 1);
       if(!new_battle){
@@ -242,7 +245,6 @@ void destroy_galactic_history(struct galaxy_history_t **history_ptr){
     if (current) free(current);
     current = next;
   }
-  if (*history_ptr) free(*history_ptr);
 }
 
 
