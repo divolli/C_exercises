@@ -30,8 +30,7 @@ unsigned char *set_fleet_status(char *line){
     status = status | (1 << 3);
   }
 
-  unsigned char *res = NULL;
-  *res = status;
+  unsigned char *res = &status;
 
   return res;
 }
@@ -146,7 +145,7 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
 
   // File handling
   FILE *fptr = fopen(fname, "r");
-  if (!fname) return 2;
+  if (!fptr) return 2;
 
   // Declaring helping buffers
   char line[256], battle_name[58], fleet_name[58];
@@ -154,10 +153,11 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
 
   // Entering main loop
   int resize = 1;
-  while (fgets(line, sizeof(line), fptr) != NULL){
-    if (sscanf(line, "BATTLE:%57[^\n]\nDATE:%u" ,battle_name, &battle_date) == 2){
+  while (fgets(line, sizeof(line), fptr) != NULL && *line != '\n'){
+
+    if (sscanf(line, "BATTLE:%57[^\n]" ,battle_name) == 1){
       // Creating new battle node
-      struct battle_node_t *new_battle = create_new_battle(battle_name, battle_date);
+      struct battle_node_t *new_battle = create_new_battle(battle_name, 1);
       if(!new_battle){
         fclose(fptr);
         // free logic
@@ -167,6 +167,13 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
       // push new battle to the start (first battle in file will be at the tail of the list)
       pushfront_node(*history_ptr, new_battle);
       (*history_ptr)->total_battles++;
+      continue;
+    }
+
+    if (sscanf(line, "DATE:%u" ,&battle_date) == 1){
+      // Writing a year
+      (*history_ptr)->head->battle->battle_date = battle_date;
+      continue;
     }
 
     if (sscanf(line, "FLEET:%57[^|]|0|%u|", fleet_name, &total_ships) == 2){
@@ -193,6 +200,7 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
       // Creating a fleet
       *(fleets + curr_fleet) = create_fleet_statuse(fleet_name, total_ships, *status_flag);
       (*history_ptr)->head->battle->num_fleets++;
+      continue;
     }
     else {
       fclose(fptr);
@@ -215,12 +223,18 @@ void destroy_galactic_history(struct galaxy_history_t **history_ptr){
 
   while(current){
     struct battle_node_t *next = current->next;
-    struct fleet_status_t **fleet = current->battle->fleet_statuses;
-    while (fleet){
-      struct fleet_status_t *temp = *fleet;
-      if (temp->fleet_name) free(temp->fleet_name);
-      if (temp) free(temp);
-      fleet++;
+
+    // struct fleet_status_t **fleet = current->battle->fleet_statuses;
+    // while (*fleet){
+    //   struct fleet_status_t *temp = *fleet;
+    //   if (temp->fleet_name) free(temp->fleet_name);
+    //   if (temp) free(temp);
+    //   fleet++;
+    // }
+
+    for (int i = 0; i < current->battle->num_fleets; ++i){
+      free(current->battle->fleet_statuses[i]->fleet_name);
+      free(current->battle->fleet_statuses[i]);
     }
     if (current->battle->fleet_statuses) free(current->battle->fleet_statuses);
     if (current->battle->battle_name) free(current->battle->battle_name);
@@ -228,7 +242,7 @@ void destroy_galactic_history(struct galaxy_history_t **history_ptr){
     if (current) free(current);
     current = next;
   }
-  free(*history_ptr);
+  if (*history_ptr) free(*history_ptr);
 }
 
 
