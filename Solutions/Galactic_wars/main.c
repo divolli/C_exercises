@@ -6,14 +6,12 @@ int main(void){
   char *file = "../galactic_data.txt";
 
   // Main struct declaration
-  struct galaxy_history_t *data = (struct galaxy_history_t *) calloc(1,sizeof(struct galaxy_history_t));
-  if (!data) return 8;
+  struct galaxy_history_t *data = NULL;
 
-  // Initialization
-  int res = initialize_history(&data);
-  if(res) {
-    destroy_galactic_history(&data);
-    return 4;
+  int res_init = initialize_history(&data);
+  if (res_init != 0) {
+      printf("ERROR: History initialization failed.\n");
+      return res_init;
   }
 
   // Read from a file
@@ -24,9 +22,8 @@ int main(void){
     return load;
   }
 
-  // display_galactic_history(data);
+  display_galactic_history(data);
   //free data
   destroy_galactic_history(&data);
-  free(data);
   return 0;
 }
