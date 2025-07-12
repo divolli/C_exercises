@@ -1,5 +1,4 @@
 #include "galactic_func.h"
-#include <stdlib.h>
 #include <stdio.h>
 
 int main(void){

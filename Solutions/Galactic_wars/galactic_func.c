@@ -155,8 +155,7 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
 
   while (fgets(line, sizeof(line), fptr) != NULL && *line != '\n'){
 
-    // If a new BATTLE is encountered, finalize the previous battle's fleet_statuses array
-    if (strstr(line, "BATTLE:") == line){ // Check if line starts with "BATTLE:"
+    if (strstr(line, "BATTLE:") == line){
       if (current_battle_node != NULL && current_battle_node->battle != NULL && current_battle_node->battle->fleet_statuses != NULL){
         size_t fleets_count = current_battle_node->battle->num_fleets;
         // Trim unused allocated memory for the *previous* battle
@@ -180,7 +179,7 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
         }
         pushfront_node(*history_ptr, new_battle);
         (*history_ptr)->total_battles++;
-        current_battle_node = new_battle; // Update current_battle_node
+        current_battle_node = new_battle;
         continue;
       } else {
         fclose(fptr);
@@ -231,11 +230,9 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
         return 4;
       }
       current_battle_data->num_fleets++;
-      // The NULL terminator will be added either on next realloc or at the end of the file/battle.
       continue;
     }
-    else { // Handle empty lines or malformed lines that are not BATTLE, DATE, or FLEET
-      // Only return error if it's not an empty line (just a newline character)
+    else {
       if (strlen(line) > 1) {
         fclose(fptr);
         destroy_galactic_history(history_ptr);
@@ -316,7 +313,7 @@ void display_galactic_history(const struct galaxy_history_t *history){
 
         printf("%s WAS ON %u YEARS AFTER FIRST GALACTIC ERA\n TOTAL AMOUNT OF FLEETS : %zu\n", current->battle->battle_name, current->battle->battle_date, current->battle->num_fleets);
 
-        for (unsigned int i = 0; i < current->battle->num_fleets; ++i){ // Use unsigned int for loop counter
+        for (unsigned int i = 0; i < current->battle->num_fleets; ++i){
             struct fleet_status_t *temp = current->battle->fleet_statuses[i];
             // Check if temp is NULL before dereferencing
             if (!temp) {
@@ -325,7 +322,6 @@ void display_galactic_history(const struct galaxy_history_t *history){
             }
 
             printf("%s AMOUNT OF SHIPS IN THIS FLEET %u\n", temp->fleet_name, temp->total_ships);
-            // Assuming status flags are 4 bits as per set_fleet_status
             printf("status flags: ");
             if (temp->status_flags & (1u << 0)) printf("Ready for Jump ");
             if (temp->status_flags & (1u << 1)) printf("Shield Active ");
