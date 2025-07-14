@@ -1,0 +1,6 @@
+# Ignore files
+
+.cache
+.vscode
+/build/
+CMakeLists.txt
