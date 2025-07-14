@@ -1,0 +1,25 @@
+a1b2c3d4e5f6g7h8 1024 1   ; Asset_01: Encrypted
+i9j0k1l2m3n4o5p6 2048 2   ; Asset_02: Read-only
+q7r8s9t0u1v2w3x4 512  3   ; Asset_03: Encrypted and Read-only
+y5z6a7b8c9d0e1f2 4096 0   ; Asset_04: No flags
+g3h4i5j6k7l8m9n0 128  4   ; Asset_05: Archived
+o1p2q3r4s5t6u7v8 768  5   ; Asset_06: Encrypted and Archived
+z9x8c7v6b5n4m3l2 300  6   ; Asset_07: Read-only and Archived
+k1j2h3g4f5d6s7a8 1500 7   ; Asset_08: Encrypted, Read-only, Archived
+e9f0g1h2i3j4k5l6 256  8   ; Asset_09: Corrupted (new flag for testing)
+m7n8o9p0q1r2s3t4 800  9   ; Asset_10: Encrypted and Corrupted
+u5v6w7x8y9z0a1b2 1100 10  ; Asset_11: Read-only and Corrupted
+c3d4e5f6g7h8i9j0 2200 12  ; Asset_12: Archived and Corrupted
+p1q2r3s4t5u6v7w8 600  13  ; Asset_13: Encrypted, Archived, Corrupted
+x9y0z1a2b3c4d5e6 1800 14  ; Asset_14: Read-only, Archived, Corrupted
+f7g8h9i0j1k2l3m4 3500 15  ; Asset_15: All flags set (1+2+4+8)
+n5o6p7q8r9s0t1u2 900  0   ; Asset_16: No flags
+v3w4x5y6z7a8b9c0 1700 1   ; Asset_17: Encrypted
+d1e2f3g4h5i6j7k8 2800 2   ; Asset_18: Read-only
+l9m0n1o2p3q4r5s6 450  3   ; Asset_19: Encrypted and Read-only
+t7u8v9w0x1y2z3a4 3200 4   ; Asset_20: Archived
+b5c6d7e8f9g0h1i2 700  5   ; Asset_21: Encrypted and Archived
+j3k4l5m6n7o8p9q0 1300 6   ; Asset_22: Read-only and Archived
+r1s2t3u4v5w6x7y8 2100 7   ; Asset_23: Encrypted, Read-only, Archived
+z9a0b1c2d3e4f5g6 500  8   ; Asset_24: Corrupted
+h7i8j9k0l1m2n3o4 2600 0   ; Asset_25: No flags
