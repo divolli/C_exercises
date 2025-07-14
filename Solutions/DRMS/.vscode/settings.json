@@ -1,9 +1,0 @@
-{
-  "files.associations": {
-     "defs.h": "c"
-  },
-  "C_Cpp.errorSquiggles": "enabled",
-  "C_Cpp.intelliSenseEngine": "disabled",
-  "clangd.path": "/usr/bin/clangd",
-  "cmake.sourceDirectory": "/home/dpvlsh/Workspace/DRMS",
-}
