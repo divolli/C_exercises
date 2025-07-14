@@ -152,11 +152,10 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
   // Entering main loop
   int resize = 3;
   struct battle_node_t *current_battle_node = NULL; // Track the battle being currently populated
-
   while (fgets(line, sizeof(line), fptr) != NULL && *line != '\n'){
 
     if (strstr(line, "BATTLE:") == line){
-      if (current_battle_node != NULL && current_battle_node->battle != NULL && current_battle_node->battle->fleet_statuses != NULL){
+      if (current_battle_node && current_battle_node->battle && current_battle_node->battle->fleet_statuses){
         size_t fleets_count = current_battle_node->battle->num_fleets;
         // Trim unused allocated memory for the *previous* battle
         struct fleet_status_t **resized = (struct fleet_status_t **) realloc(current_battle_node->battle->fleet_statuses, (fleets_count + 1) * sizeof(struct fleet_status_t *));
@@ -170,6 +169,26 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
       }
 
       if (sscanf(line, "BATTLE:%57[^\n]", battle_name) == 1){
+
+        // check for battle name if exists
+        int check = 0;
+        if (current_battle_node){
+          struct battle_node_t *current = (*history_ptr)->head;
+          while(current) {
+            if (!current->battle) {current = current->next; continue;}
+
+            if (strcmp(current->battle->battle_name, battle_name) == 0) {
+              check = 1;
+              break;
+            }
+            current = current->next;
+          }
+          if (check){
+            current_battle_node = current;
+            continue;
+          }
+        }
+
         // Creating new battle node
         struct battle_node_t *new_battle = create_new_battle(battle_name, 0);
         if(!new_battle){
@@ -195,8 +214,44 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
         destroy_galactic_history(history_ptr);
         return 3; // Corrupted file: DATE without BATTLE
       }
-      current_battle_node->battle->battle_date = battle_date;
-      continue;
+      if (current_battle_node->battle->battle_date == 0){
+        current_battle_node->battle->battle_date = battle_date;
+        continue;
+      }
+      // Check if battle with existing date is equal date if yes ok if not creating new battle node with same name but different date
+      struct battle_node_t *current = (*history_ptr)->head;
+      int check = 0;
+      while(current) {
+        if (!current->battle) {current = current->next; continue;}
+
+        if (strcmp(current->battle->battle_name, battle_name) == 0 && current->battle->battle_date == battle_date){
+          check = 1;
+          break;
+        }
+        else if (strcmp(current->battle->battle_name, battle_name) == 0 && current->battle->battle_date != battle_date){
+          check = 2;
+          break;
+        }
+        current = current->next;
+      }
+      if (check == 1){
+        current_battle_node = current;
+        continue;
+      }
+      if (check == 2){
+        // Creating new battle node
+        struct battle_node_t *new_battle = create_new_battle(battle_name, 0);
+        if(!new_battle){
+            fclose(fptr);
+            destroy_galactic_history(history_ptr);
+            return 4;
+        }
+        pushfront_node(*history_ptr, new_battle);
+        (*history_ptr)->total_battles++;
+        current_battle_node = new_battle;
+        current_battle_node->battle->battle_date = battle_date;
+        continue;
+      }
     }
 
     if (strstr(line, "FLEET:") == line && sscanf(line, "FLEET:%57[^|]|%*d|%u|", fleet_name, &total_ships) == 2){ // Use %*d to skip the 0
@@ -242,7 +297,7 @@ int load_galactic_history(const char *fname, struct galaxy_history_t **history_p
   }
 
   // After the loop, the last battle's fleet_statuses array needs to be finalized
-  if((*history_ptr)->head != NULL && (*history_ptr)->head->battle != NULL && (*history_ptr)->head->battle->fleet_statuses != NULL){
+  if((*history_ptr)->head && (*history_ptr)->head->battle && (*history_ptr)->head->battle->fleet_statuses){
     size_t fleets_count = (*history_ptr)->head->battle->num_fleets;
     struct fleet_status_t **resized = (struct fleet_status_t **) realloc((*history_ptr)->head->battle->fleet_statuses, (fleets_count + 1) * sizeof(struct fleet_status_t *));
     if (!resized) {
@@ -270,7 +325,7 @@ void destroy_galactic_history(struct galaxy_history_t **history_ptr){
     if (current->battle){
       if (current->battle->fleet_statuses){
         struct fleet_status_t **fleet_ptr_iter = current->battle->fleet_statuses;
-        while (*fleet_ptr_iter != NULL) {
+        while (*fleet_ptr_iter) {
             struct fleet_status_t *fleet_to_free = *fleet_ptr_iter;
             if (fleet_to_free->fleet_name) {
                 free(fleet_to_free->fleet_name);
@@ -365,7 +420,7 @@ int count_fleets_with_status_bits(const struct galaxy_history_t *history, unsign
 // `operation_type`: 0 - set bits (OR), 1 - clear bits (AND NOT), 2 - toggle bits (XOR).
 // `mask`: The bitmask to apply the operation with.
 // Returns: The number of fleets modified, -1 if battle not found or on error.
-int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char *battle_name, int operation_type, unsigned int mask){
+int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char *battle_name, unsigned int date, int operation_type, unsigned int mask){
   if (!history || !battle_name) return -1;
 
   int count = 0;
@@ -376,7 +431,7 @@ int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char
   while(current) {
     if (!current->battle) {current = current->next; continue;}
 
-    if (strcmp(current->battle->battle_name, battle_name) == 0){
+    if (strcmp(current->battle->battle_name, battle_name) == 0 && current->battle->battle_date == date){
       struct fleet_status_t **curr_fleet = current->battle->fleet_statuses;
       while(*curr_fleet){
         struct fleet_status_t *iner_fleet = *curr_fleet;
@@ -396,9 +451,10 @@ int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char
             return -1;
         }
         count++;
-        check = 1;
         curr_fleet++;
       }
+      check = 1;
+      break;
     }
     current = current->next;
   }
@@ -409,4 +465,35 @@ int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char
   }
 
   return count;
+}
+
+
+// Returns: 0 on success, 1 on invalid input, 2 - battle not found, 4 - memory allocation failure
+int add_fleet_to_battle(struct galaxy_history_t *history, const char *battle_name,unsigned int date, struct fleet_status_t *new_fleet){
+  if (!history || !battle_name || !new_fleet) return 1;
+
+  struct battle_node_t *current = history->head;
+  int check = 0;
+
+  while(current) {
+    if (!current->battle) {current = current->next; continue;}
+
+    if (strcmp(current->battle->battle_name, battle_name) == 0 && current->battle->battle_date == date){
+      size_t size = current->battle->num_fleets + 2;
+      struct fleet_status_t **resized = (struct fleet_status_t **) realloc(current->battle->fleet_statuses,  size * sizeof(struct fleet_status_t *));
+
+      if (!resized) return 4;
+
+      current->battle->fleet_statuses = resized;
+      current->battle->fleet_statuses[current->battle->num_fleets] = new_fleet;
+      current->battle->num_fleets++;
+      current->battle->fleet_statuses[current->battle->num_fleets] = NULL;
+      check = 1;
+      break;
+    }
+    current = current->next;
+  }
+
+  if (!check) return 2;
+  return 0;
 }

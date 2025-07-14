@@ -12,6 +12,10 @@ BATTLE:Skirmish at Ord Mantell
 DATE:19820716
 FLEET:Smuggler Alliance|0|15|Ready for Jump|Shields Active
 FLEET:Imperial Blockade Fleet|0|30|Shields Active
+BATTLE:Fall of Umbara
+DATE:20050519
+FLEET:Skiergs Legion|0|232|Shields Active|Ready for Jump
+FLEET:Umbara Separatist|0|153|Critical Damage|Withdrawal
 BATTLE:Liberation of Kashyyyk
 DATE:20050519
 FLEET:Wookiee Freedom Fighters|0|200|Ready for Jump|Shields Active

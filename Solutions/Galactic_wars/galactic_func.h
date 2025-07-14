@@ -68,12 +68,14 @@ int count_fleets_with_status_bits(const struct galaxy_history_t *history, unsign
 // `operation_type`: 0 - set bits (OR), 1 - clear bits (AND NOT), 2 - toggle bits (XOR).
 // `mask`: The bitmask to apply the operation with.
 // Returns: The number of fleets modified, -1 if battle not found or on error.
-int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char *battle_name, int operation_type, unsigned int mask);
+int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char *battle_name, unsigned int date, int operation_type, unsigned int mask);
 
 
 // Frees all memory allocated for the galactic war history system.
 // `history_ptr`: Pointer to a pointer to the galaxy_history_t structure.
 void destroy_galactic_history(struct galaxy_history_t **history_ptr);
 
+// Returns: 0 on success, 1 on invalid input, 2 - battle not found, 4 - memory allocation failure
+int add_fleet_to_battle(struct galaxy_history_t *history, const char *battle_name,unsigned int date, struct fleet_status_t *new_fleet);
 
 #endif //GALACTIC_FUNC_H
