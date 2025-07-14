@@ -311,7 +311,7 @@ void display_galactic_history(const struct galaxy_history_t *history){
             continue;
         }
 
-        printf("%s WAS ON %u YEARS AFTER FIRST GALACTIC ERA\n TOTAL AMOUNT OF FLEETS : %zu\n", current->battle->battle_name, current->battle->battle_date, current->battle->num_fleets);
+        printf("%s WAS ON %u YEARS AFTER FIRST GALACTIC ERA\nTOTAL AMOUNT OF FLEETS : %zu\n", current->battle->battle_name, current->battle->battle_date, current->battle->num_fleets);
 
         for (unsigned int i = 0; i < current->battle->num_fleets; ++i){
             struct fleet_status_t *temp = current->battle->fleet_statuses[i];

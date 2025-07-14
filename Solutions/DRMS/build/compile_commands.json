@@ -1,0 +1,8 @@
+[
+{
+  "directory": "/home/dpvlsh/Workspace/DRMS/build",
+  "command": "/usr/bin/gcc    -Wall -Wextra -Wpedantic -g -std=gnu17 -o CMakeFiles/main.dir/main.c.o -c /home/dpvlsh/Workspace/DRMS/main.c",
+  "file": "/home/dpvlsh/Workspace/DRMS/main.c",
+  "output": "CMakeFiles/main.dir/main.c.o"
+}
+]

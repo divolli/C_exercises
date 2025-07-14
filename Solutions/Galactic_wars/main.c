@@ -17,7 +17,7 @@ int main(void){
   int load = load_galactic_history(file, &data);
   if (load != 0){
     destroy_galactic_history(&data);
-    printf("ERROR OCCUR %d", load);
+    printf("ERROR OCCUR %d\n", load);
     return load;
   }
 

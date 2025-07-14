@@ -1,0 +1,3 @@
+/home/dpvlsh/Workspace/DRMS/build/CMakeFiles/main.dir
+/home/dpvlsh/Workspace/DRMS/build/CMakeFiles/edit_cache.dir
+/home/dpvlsh/Workspace/DRMS/build/CMakeFiles/rebuild_cache.dir
