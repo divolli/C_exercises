@@ -22,6 +22,11 @@ int main(void){
   }
 
   display_galactic_history(data);
+  printf("\nChanging fleet statuses\n");
+  int first_bit_set = count_fleets_with_status_bits(data, (1u << 0));
+  printf("Fleet statuses with first set statuse -> %d\n", first_bit_set);
+  int modified = modify_fleet_statuses_in_battle(data, "Battle of Yavin", 1, (1u << 3));
+  printf("Modified fleet statuses -> %d\n", modified);
   //free data
   destroy_galactic_history(&data);
   return 0;

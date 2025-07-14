@@ -339,7 +339,24 @@ void display_galactic_history(const struct galaxy_history_t *history){
 // specified status bits set.
 // Returns: The count of fleets meeting the criteria, -1 on error (e.g., NULL history).
 int count_fleets_with_status_bits(const struct galaxy_history_t *history, unsigned int mask){
-  return 0; // place holder
+  if (!history) return -1;
+  int count = 0;
+
+  struct battle_node_t *current = history->head;
+
+  while(current) {
+    if (!current->battle) {current = current->next; continue;}
+    struct fleet_status_t **curr_fleet = current->battle->fleet_statuses;
+    while(*curr_fleet){
+      struct fleet_status_t *iner_fleet = *curr_fleet;
+      if (!iner_fleet) {curr_fleet++; continue;}
+      if (iner_fleet->status_flags & mask) count++;
+      curr_fleet++;
+    }
+    current = current->next;
+  }
+
+  return count;
 }
 
 
@@ -349,5 +366,47 @@ int count_fleets_with_status_bits(const struct galaxy_history_t *history, unsign
 // `mask`: The bitmask to apply the operation with.
 // Returns: The number of fleets modified, -1 if battle not found or on error.
 int modify_fleet_statuses_in_battle(struct galaxy_history_t *history, const char *battle_name, int operation_type, unsigned int mask){
-  return 0; // place holder
+  if (!history || !battle_name) return -1;
+
+  int count = 0;
+  int check = 0;
+
+  struct battle_node_t *current = history->head;
+
+  while(current) {
+    if (!current->battle) {current = current->next; continue;}
+
+    if (strcmp(current->battle->battle_name, battle_name) == 0){
+      struct fleet_status_t **curr_fleet = current->battle->fleet_statuses;
+      while(*curr_fleet){
+        struct fleet_status_t *iner_fleet = *curr_fleet;
+        if (!iner_fleet) {curr_fleet++; continue;}
+        switch (operation_type){
+          case 0:
+            iner_fleet->status_flags |= mask;
+            break;
+          case 1:
+            iner_fleet->status_flags &= ~mask;
+            break;
+          case 2:
+            iner_fleet->status_flags ^= mask;
+            break;
+          default:
+            printf("Not existing operation type!\nModified fleets until error: %d", count);
+            return -1;
+        }
+        count++;
+        check = 1;
+        curr_fleet++;
+      }
+    }
+    current = current->next;
+  }
+
+  if (!check){
+    printf("Battle not found!\n");
+    return -1;
+  }
+
+  return count;
 }
