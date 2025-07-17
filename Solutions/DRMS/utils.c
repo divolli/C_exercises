@@ -43,12 +43,7 @@ CREATE_STRING_BIT_PAIR_COUNT_FUNC(count_01_pairs_in_string)
   @brief Function for comparing two hashes (strings).
   @return <0 if hash1 < hash2, 0 if equal, >0 if hash1 > hash2.
 */
-int compare_asset_hashes(const char *hash1, const char *hash2, ErrorCode *error){
-  if (!hash1 || !hash2) {
-    if (error) *error = ERROR_INVALID_ARGUMENT;
-    return 0;
-  }
-  if (error) *error = SUCCESS;
+int compare_asset_hashes(const char *hash1, const char *hash2){
   return strcmp(hash1, hash2);
 }
 
@@ -57,20 +52,12 @@ int compare_asset_hashes(const char *hash1, const char *hash2, ErrorCode *error)
   Implement simple case-insensitivity (e.g., convert to lowercase for comparison).
   @return <0 if name1 < name2, 0 if equal, >0 if name1 > name2.
 */
-int compare_user_names(const char *name1, const char *name2, ErrorCode *error){
-  if (!name1 || !name2){
-    if (error) *error = ERROR_INVALID_ARGUMENT;
-    return 0;
-  }
+int compare_user_names(const char *name1, const char *name2){
 
   char *lower_name1 = strdup(name1);
-  if(!lower_name1){
-    if (error) *error = ERROR_INVALID_ARGUMENT;
-    return 0;
-  }
+
   char *lower_name2 = strdup(name2);
   if(!lower_name2){
-    if (error) *error = ERROR_INVALID_ARGUMENT;
     free(lower_name1);
     return 0;
   }
@@ -86,6 +73,5 @@ int compare_user_names(const char *name1, const char *name2, ErrorCode *error){
   free(lower_name1);
   free(lower_name2);
 
-  if (error) *error = SUCCESS;
   return result;
 }

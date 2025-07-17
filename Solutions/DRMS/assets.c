@@ -1,14 +1,9 @@
 #include "assets.h"
+#include "errors.h"
 #include "stdlib.h"
 #include "string.h"
 
-/**
- * @brief Creates a new DigitalAsset node.
- * @param hash Unique asset hash (string).
- * @param size Size of the asset in bytes.
- * @param flags Bit flags for the asset.
- * @return Pointer to the newly created node, or NULL if memory allocation fails or data is invalid.
- */
+
 DigitalAsset *create_asset_node(const char *hash, uint32_t size, uint8_t flags){
   if (!hash) return NULL;
 
@@ -18,18 +13,61 @@ DigitalAsset *create_asset_node(const char *hash, uint32_t size, uint8_t flags){
 
   //Writing hash to the asset hash
   new_asset->hash = strdup(hash);
+  if(!new_asset->hash){
+    free(new_asset);
+    return NULL;
+  }
+
+  //Write size, flags and set next to NULL
+  new_asset->flags = flags;
+  new_asset->size_bytes = size;
+  new_asset->next = NULL;
+
+  return new_asset;
 }
 
-/**
- * @brief Inserts a new asset into the list, maintaining alphabetical order by hash.
- * @param head Pointer to the pointer to the head of the DigitalAsset list.
- * @param hash Hash of the asset to insert.
- * @param size Size of the asset.
- * @param flags Flags of the asset.
- * @param compare_func Function pointer for comparing hashes.
- * @return ErrorCode.
- */
-ErrorCode insert_asset(DigitalAsset **head, const char *hash, uint32_t size, uint8_t flags, AssetHashCompareFunc compare_func);
+ErrorCode insert_asset(DigitalAsset **head, const char *hash, uint32_t size, uint8_t flags, AssetHashCompareFunc compare_func){
+  if (!head || !hash || !compare_func) return ERROR_INVALID_ARGUMENT;
+
+  // Creating new asset
+  DigitalAsset *new_asset = create_asset_node(hash, size, flags);
+  if (!new_asset) return ERROR_MEMORY_ALLOCATION_FAILED;
+
+  // If head is NULL set new node to head
+  DigitalAsset *current = *head;
+  DigitalAsset *previous = NULL;
+  if (!current){
+    *head = new_asset;
+    return SUCCESS;
+  }
+
+  // Compare all nodes to insert by alphabetical order
+  while (current){
+    int comp = compare_func(new_asset->hash, current->hash);
+    if ( comp < 0 ){
+      if(!previous){ // If previous is NULL, it means current is the original head
+        new_asset->next = *head;
+        *head = new_asset;
+        return SUCCESS;
+      }
+      // Insertion in the middle of a list
+      new_asset->next = current;
+      previous->next = new_asset;
+      return SUCCESS;
+    }
+    else if (comp == 0){ // If our hash is duplicate
+      free(new_asset->hash);
+      free(new_asset);
+      return ERROR_DUPLICATE_ENTRY;
+    }
+    previous = current;
+    current = current->next;
+  }
+
+  // Hash in new asset is the smallest insert at the end
+  previous->next = new_asset;
+  return SUCCESS;
+}
 
 /**
  * @brief Finds an asset in the list by its hash.
