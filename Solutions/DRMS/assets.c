@@ -90,8 +90,9 @@ ErrorCode find_asset(DigitalAsset *head, const char *hash, DigitalAsset **found_
   return ERROR_NOT_FOUND;
 }
 
+
 void clear_assets(DigitalAsset **head){
-if ( !head ) return;
+  if ( !head ) return;
 
   DigitalAsset *current = *head;
   while(current){
@@ -144,17 +145,13 @@ ErrorCode delete_asset(DigitalAsset **head, const char *hash, AssetHashCompareFu
   if (!head || !hash || !compare_func) return ERROR_INVALID_ARGUMENT;
 
   // Searching for match in hashes for deletion
-  DigitalAsset *current = *head;
-  while(current){
-    int comp = compare_func(current->hash, hash);
-    if(comp == 0){
-      // TO DO
-    }
-    current = current->next;
- }
+  DigitalAsset *found = NULL;
+  ErrorCode error = find_asset(*head, hash, &found, compare_func);
+  if (error != SUCCESS) return error;
 
-  // Not found
-  return ERROR_NOT_FOUND;
+  // TO DO >>>
+
+  return SUCCESS;
 }
 
 
