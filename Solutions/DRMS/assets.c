@@ -2,6 +2,8 @@
 #include "errors.h"
 #include "stdlib.h"
 #include "string.h"
+#include <stdint.h>
+#include <stdio.h>
 
 
 DigitalAsset *create_asset_node(const char *hash, uint32_t size, uint8_t flags){
@@ -25,6 +27,7 @@ DigitalAsset *create_asset_node(const char *hash, uint32_t size, uint8_t flags){
 
   return new_asset;
 }
+
 
 ErrorCode insert_asset(DigitalAsset **head, const char *hash, uint32_t size, uint8_t flags, AssetHashCompareFunc compare_func){
   if (!head || !hash || !compare_func) return ERROR_INVALID_ARGUMENT;
@@ -69,15 +72,64 @@ ErrorCode insert_asset(DigitalAsset **head, const char *hash, uint32_t size, uin
   return SUCCESS;
 }
 
-/**
- * @brief Finds an asset in the list by its hash.
- * @param head Head of the DigitalAsset list.
- * @param hash Hash of the asset to find.
- * @param found_asset Pointer to a pointer where the found asset will be stored.
- * @param compare_func Function pointer for comparing hashes.
- * @return ErrorCode.
- */
-ErrorCode find_asset(DigitalAsset *head, const char *hash, DigitalAsset **found_asset, AssetHashCompareFunc compare_func);
+
+ErrorCode find_asset(DigitalAsset *head, const char *hash, DigitalAsset **found_asset, AssetHashCompareFunc compare_func){
+  if (!head || !hash || !found_asset || !compare_func) return ERROR_INVALID_ARGUMENT;
+
+  // Searching for match in hashes
+  DigitalAsset *current = head;
+  while(current){
+    int comp = compare_func(current->hash, hash);
+    if(comp == 0){
+      *found_asset = current;
+      return SUCCESS;
+    }
+    current = current->next;
+  }
+  // Not found
+  return ERROR_NOT_FOUND;
+}
+
+void clear_assets(DigitalAsset **head){
+if ( !head ) return;
+
+  DigitalAsset *current = *head;
+  while(current){
+    DigitalAsset *next = current->next;
+    free(current->hash);
+    free(current);
+    current = next;
+  }
+
+  *head = NULL;
+}
+
+
+void print_assets(DigitalAsset *head){
+  if (!head) return;
+
+  DigitalAsset *current = head;
+  while (current){
+    printf("%s | Size: %d bytes | ", current->hash, current->size_bytes);
+    // Printing asset flag
+    uint8_t flag = current->flags;
+    if (flag & ASSET_FLAG_ENCRYPTED){
+      printf("Asset is encrypted ");
+    }
+    if (flag & ASSET_FLAG_READ_ONLY){
+      printf("Asset is read only ");
+    }
+    if (flag & ASSET_FLAG_ARCHIVED){
+      printf("Asset is archived ");
+    }
+    if (flag & ASSET_FLAG_CORRUPTED){
+      printf("Asset is corrupted ");
+    }
+    printf("\n");
+    current = current->next;
+  }
+}
+
 
 /**
  * @brief Deletes an asset from the list by its hash.
@@ -88,19 +140,23 @@ ErrorCode find_asset(DigitalAsset *head, const char *hash, DigitalAsset **found_
  * @param compare_func Function pointer for comparing hashes.
  * @return ErrorCode.
  */
-ErrorCode delete_asset(DigitalAsset **head, const char *hash, AssetHashCompareFunc compare_func);
+ErrorCode delete_asset(DigitalAsset **head, const char *hash, AssetHashCompareFunc compare_func){ // TO DO end this function after users.c
+  if (!head || !hash || !compare_func) return ERROR_INVALID_ARGUMENT;
 
-/**
- * @brief Frees all memory occupied by the DigitalAsset list.
- * @param head Pointer to the pointer to the head of the DigitalAsset list.
- */
-void clear_assets(DigitalAsset **head);
+  // Searching for match in hashes for deletion
+  DigitalAsset *current = *head;
+  while(current){
+    int comp = compare_func(current->hash, hash);
+    if(comp == 0){
+      // TO DO
+    }
+    current = current->next;
+ }
 
-/**
- * @brief Prints all assets in the list.
- * @param head Head of the DigitalAsset list.
- */
-void print_assets(DigitalAsset *head);
+  // Not found
+  return ERROR_NOT_FOUND;
+}
+
 
 /**
  * @brief Loads assets from a file into the list.
@@ -111,6 +167,7 @@ void print_assets(DigitalAsset *head);
  * @return ErrorCode.
  */
 ErrorCode load_assets_from_file(DigitalAsset **head, const char *filepath, AssetHashCompareFunc compare_func);
+
 
 /**
  * @brief Saves assets from the list to a file.
