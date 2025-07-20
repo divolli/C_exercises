@@ -2,8 +2,10 @@
 #include "errors.h"
 #include "stdlib.h"
 #include "string.h"
+#include "utils.h"
 #include <stdint.h>
 #include <stdio.h>
+#define CHECK 0
 
 
 DigitalAsset *create_asset_node(const char *hash, uint32_t size, uint8_t flags){
@@ -132,6 +134,65 @@ void print_assets(DigitalAsset *head){
 }
 
 
+ErrorCode load_assets_from_file(DigitalAsset **head, const char *filepath, AssetHashCompareFunc compare_func){
+  if (!head || !filepath || !compare_func) return ERROR_INVALID_ARGUMENT;
+
+  // Opening the file
+  FILE *file = fopen(filepath, "r");
+  if (!file) return ERROR_FILE_NOT_FOUND;
+
+  // helper buffers
+  char line[256], hash[126]; uint32_t bsize; uint8_t flag;
+
+  // Main file reading loop
+  while (fgets(line , sizeof(line), file)) {
+    // Trim line
+    char *comment_start = strchr(line, ';');
+    if (comment_start) *comment_start = '\0';
+
+
+    // Check if empty line
+    if (*line == '\n') continue;
+
+    // Scan & check the line
+    if (sscanf(line, "%s %u %c", hash, &bsize, &flag) != 3){
+      fclose(file);
+      clear_assets(head);
+      return ERROR_FILE_CORRUPTED;
+    }
+
+    // Pushing node
+    ErrorCode error = insert_asset(head, hash, bsize, flag, compare_func);
+    if(error != SUCCESS){
+      fclose(file);
+      clear_assets(head);
+      return error;
+    }
+  }
+
+  fclose(file);
+  return SUCCESS;
+}
+
+
+ErrorCode save_assets_to_file(DigitalAsset *head, const char *filepath){
+  if (!head || !filepath) return ERROR_INVALID_ARGUMENT;
+
+  // Open file
+  FILE *file = fopen(filepath, "a");
+  if (!file) return ERROR_FILE_NOT_FOUND;
+
+  DigitalAsset *current = head;
+  while(current){
+    fprintf(file, "%s %u %u\n", current->hash, current->size_bytes, current->flags);
+    current = current->next;
+  }
+
+  fclose(file);
+  return SUCCESS;
+}
+
+
 /**
  * @brief Deletes an asset from the list by its hash.
  * Important: This function must also handle the removal of all *references* to this asset
@@ -155,21 +216,24 @@ ErrorCode delete_asset(DigitalAsset **head, const char *hash, AssetHashCompareFu
 }
 
 
-/**
- * @brief Loads assets from a file into the list.
- * File format (example): hash size_bytes flags
- * @param head Pointer to the pointer to the head of the DigitalAsset list.
- * @param filepath Path to the file.
- * @param compare_func Function pointer for comparing hashes (for insertion).
- * @return ErrorCode.
- */
-ErrorCode load_assets_from_file(DigitalAsset **head, const char *filepath, AssetHashCompareFunc compare_func);
+//Quick check
+int asset_quick_check(void){
+  if (CHECK){
+    printf("START OF THE PROGRAM\n");
+    DigitalAsset *head = NULL;
+    ErrorCode err = load_assets_from_file(&head, "../assets.txt", compare_asset_hashes);
+    if(err != SUCCESS) {
+      return err;
+    }
+    print_assets(head);
 
-
-/**
- * @brief Saves assets from the list to a file.
- * @param head Head of the DigitalAsset list.
- * @param filepath Path to the file.
- * @return ErrorCode.
- */
-ErrorCode save_assets_to_file(DigitalAsset *head, const char *filepath);
+    ErrorCode load = save_assets_to_file(head, "../res.txt");
+    if (load != SUCCESS){
+      clear_assets(&head);
+      return load;
+    }
+    clear_assets(&head);
+    return 0;
+  }
+  return 0;
+}
