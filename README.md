@@ -4,7 +4,7 @@
 If you're a student struggling with C programming — especially with memory allocation, pointer logic, and understanding what your code is really doing — you're in the right place.
 ## 📚 What is this?
 
-This is a growing collection of carefully crafted C exercises designed to help you:
+This is a growing collection of crafted C exercises designed to help you:
 
 - Get better at memory management and dynamic allocation
 
@@ -14,8 +14,6 @@ This is a growing collection of carefully crafted C exercises designed to help y
 
 The exercises are written in .md files, located in the exercises/ folder.
 ## 💡 How to use it
-
-Treat this as your personal mini-project. These aren't just quick drills — they’re challenges meant to make you think.
 
 Here’s how I recommend you approach them:
     
@@ -39,14 +37,14 @@ I'm a student myself. I know how confusing C can be.
 So I'm going through the same journey — and I'm publishing my own solutions in the solutions/ folder as soon as I complete them.
 They’re not perfect, but that’s the point. You’ll see how another student thinks and solves.
 
-> Learning by doing is the only way to really understand C. No shortcuts, just progress.
+> Learning by doing is the only way to really understand C (in my case). 
 
 ## 🔧 Requirements
 
 Any Linux environment or compiler (e.g. gcc, clang) will do.
 Use whatever editor or IDE you're comfortable with — VSCode, Neovim, etc.
 
-##📂 Structure
+## 📂 Structure
 ```
 .
 ├── exercises/
@@ -58,7 +56,3 @@ Use whatever editor or IDE you're comfortable with — VSCode, Neovim, etc.
 │   └── ...
 └── README.md     # You’re here
 ```
-## 🤝 Contributions?
-
-Not yet. Let me first grow this a bit more.
-But later on, feel free to fork and add your own exercises!
